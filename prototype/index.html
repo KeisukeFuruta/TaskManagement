@@ -20,31 +20,48 @@
     <div class="list">
       <div class="list-header">
         <span class="list-title" contenteditable="false">TODO</span>
+        <div class="sort-bar">
+          <button class="sort-btn" data-sort="due">📅 日付</button>
+          <button class="sort-btn" data-sort="priority">🔥 優先度</button>
+        </div>
         <button class="list-menu-btn">⋮</button>
         <div class="list-menu hidden">
           <button class="list-delete-btn">削除</button>
         </div>
       </div>
       <div class="cards">
-        <div class="card" data-card-id="1">
-          <div class="card-labels">
-            <span class="label-chip" style="background:#F87171;"></span>
-            <span class="label-chip" style="background:#60A5FA;"></span>
-          </div>
+        <div class="card" data-card-id="1" data-priority="urgent">
+          <div class="card-priority urgent">緊急</div>
           <div class="card-title">デザインのレビュー</div>
           <div class="card-due overdue">📅 2026/06/25</div>
-        </div>
-        <div class="card" data-card-id="2">
-          <div class="card-labels">
-            <span class="label-chip" style="background:#FBBF24;"></span>
+          <button class="card-menu-btn">⋮</button>
+          <div class="card-menu hidden">
+            <button class="card-move-up-btn">↑ 上に移動</button>
+            <button class="card-move-down-btn">↓ 下に移動</button>
+            <button class="card-delete-btn">削除</button>
           </div>
+        </div>
+        <div class="card" data-card-id="2" data-priority="high">
+          <div class="card-priority high">高</div>
           <div class="card-title">API仕様書を書く</div>
           <div class="card-due today">📅 2026/06/30</div>
+          <button class="card-menu-btn">⋮</button>
+          <div class="card-menu hidden">
+            <button class="card-move-up-btn">↑ 上に移動</button>
+            <button class="card-move-down-btn">↓ 下に移動</button>
+            <button class="card-delete-btn">削除</button>
+          </div>
         </div>
-        <div class="card" data-card-id="3">
-          <div class="card-labels"></div>
+        <div class="card" data-card-id="3" data-priority="low">
+          <div class="card-priority low">低</div>
           <div class="card-title">ミーティング資料の準備</div>
           <div class="card-due">📅 2026/07/05</div>
+          <button class="card-menu-btn">⋮</button>
+          <div class="card-menu hidden">
+            <button class="card-move-up-btn">↑ 上に移動</button>
+            <button class="card-move-down-btn">↓ 下に移動</button>
+            <button class="card-delete-btn">削除</button>
+          </div>
         </div>
       </div>
       <button class="add-card-btn">＋ カードを追加</button>
@@ -54,23 +71,37 @@
     <div class="list">
       <div class="list-header">
         <span class="list-title" contenteditable="false">進行中</span>
+        <div class="sort-bar">
+          <button class="sort-btn" data-sort="due">📅 日付</button>
+          <button class="sort-btn" data-sort="priority">🔥 優先度</button>
+        </div>
         <button class="list-menu-btn">⋮</button>
         <div class="list-menu hidden">
           <button class="list-delete-btn">削除</button>
         </div>
       </div>
       <div class="cards">
-        <div class="card" data-card-id="4">
-          <div class="card-labels">
-            <span class="label-chip" style="background:#34D399;"></span>
-          </div>
+        <div class="card" data-card-id="4" data-priority="medium">
+          <div class="card-priority medium">中</div>
           <div class="card-title">バックエンドのDB設計</div>
           <div class="card-due">📅 2026/07/10</div>
+          <button class="card-menu-btn">⋮</button>
+          <div class="card-menu hidden">
+            <button class="card-move-up-btn">↑ 上に移動</button>
+            <button class="card-move-down-btn">↓ 下に移動</button>
+            <button class="card-delete-btn">削除</button>
+          </div>
         </div>
-        <div class="card" data-card-id="5">
-          <div class="card-labels"></div>
+        <div class="card" data-card-id="5" data-priority="none">
+          <div class="card-priority none"></div>
           <div class="card-title">Reactコンポーネント設計</div>
           <div class="card-due"></div>
+          <button class="card-menu-btn">⋮</button>
+          <div class="card-menu hidden">
+            <button class="card-move-up-btn">↑ 上に移動</button>
+            <button class="card-move-down-btn">↓ 下に移動</button>
+            <button class="card-delete-btn">削除</button>
+          </div>
         </div>
       </div>
       <button class="add-card-btn">＋ カードを追加</button>
@@ -80,18 +111,26 @@
     <div class="list">
       <div class="list-header">
         <span class="list-title" contenteditable="false">完了</span>
+        <div class="sort-bar">
+          <button class="sort-btn" data-sort="due">📅 日付</button>
+          <button class="sort-btn" data-sort="priority">🔥 優先度</button>
+        </div>
         <button class="list-menu-btn">⋮</button>
         <div class="list-menu hidden">
           <button class="list-delete-btn">削除</button>
         </div>
       </div>
       <div class="cards">
-        <div class="card" data-card-id="6">
-          <div class="card-labels">
-            <span class="label-chip" style="background:#A78BFA;"></span>
-          </div>
+        <div class="card" data-card-id="6" data-priority="high">
+          <div class="card-priority high">高</div>
           <div class="card-title">要件定義書の作成</div>
           <div class="card-due">📅 2026/06/28</div>
+          <button class="card-menu-btn">⋮</button>
+          <div class="card-menu hidden">
+            <button class="card-move-up-btn">↑ 上に移動</button>
+            <button class="card-move-down-btn">↓ 下に移動</button>
+            <button class="card-delete-btn">削除</button>
+          </div>
         </div>
       </div>
       <button class="add-card-btn">＋ カードを追加</button>
@@ -119,23 +158,19 @@
         </div>
 
         <div class="modal-section">
-          <label>ラベル</label>
-          <div class="label-selector">
-            <button class="label-btn" data-color="red"   style="background:#F87171;" title="赤"></button>
-            <button class="label-btn" data-color="yellow" style="background:#FBBF24;" title="黄"></button>
-            <button class="label-btn" data-color="green" style="background:#34D399;" title="緑"></button>
-            <button class="label-btn" data-color="blue"  style="background:#60A5FA;" title="青"></button>
-            <button class="label-btn" data-color="purple" style="background:#A78BFA;" title="紫"></button>
+          <label>優先度</label>
+          <div class="priority-selector">
+            <button class="priority-btn" data-priority="urgent">🔴 緊急</button>
+            <button class="priority-btn" data-priority="high">🟡 高</button>
+            <button class="priority-btn" data-priority="medium">🔵 中</button>
+            <button class="priority-btn" data-priority="low">🟢 低</button>
+            <button class="priority-btn" data-priority="none">－ なし</button>
           </div>
         </div>
 
         <div class="modal-section">
           <label>期限日</label>
           <input type="date" id="modal-due" class="modal-input" />
-        </div>
-
-        <div class="modal-footer">
-          <button class="btn-delete" id="modal-delete">削除</button>
         </div>
 
       </div>
