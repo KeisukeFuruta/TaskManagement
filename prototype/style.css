@@ -1,0 +1,340 @@
+/* ===== リセット・ベース ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  background: #e2e8f0;
+  color: #1e293b;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== ヘッダー ===== */
+header {
+  background: #1e293b;
+  color: #fff;
+  padding: 0 20px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+header h1 { font-size: 18px; font-weight: 600; letter-spacing: 0.5px; }
+
+/* ===== ボード ===== */
+.board {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  overflow-x: auto;
+  flex: 1;
+}
+
+/* ===== リスト ===== */
+.list {
+  background: #f1f5f9;
+  border-radius: 10px;
+  width: 272px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 80px);
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px 8px;
+  position: relative;
+}
+
+.list-title {
+  flex: 1;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  outline: none;
+}
+.list-title:focus {
+  border-color: #3b82f6;
+  background: #fff;
+  cursor: text;
+}
+
+.list-menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #64748b;
+  padding: 4px 6px;
+  border-radius: 4px;
+  line-height: 1;
+}
+.list-menu-btn:hover { background: #e2e8f0; }
+
+.list-menu {
+  position: absolute;
+  top: 36px;
+  right: 8px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  z-index: 10;
+  min-width: 100px;
+}
+.list-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: #ef4444;
+  font-size: 13px;
+}
+.list-menu button:hover { background: #fef2f2; }
+
+/* ===== カード一覧 ===== */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 8px;
+  overflow-y: auto;
+}
+
+/* ===== カード ===== */
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: box-shadow 0.15s;
+}
+.card:hover { box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+
+.card-labels {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+  min-height: 8px;
+}
+.label-chip {
+  height: 8px;
+  width: 40px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.card-title { font-size: 14px; line-height: 1.4; }
+
+.card-due {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 6px;
+}
+.card-due.overdue {
+  color: #ef4444;
+  background: #fef2f2;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+.card-due.today {
+  color: #f97316;
+}
+
+/* ===== カード追加ボタン ===== */
+.add-card-btn {
+  display: block;
+  width: 100%;
+  margin: 8px 0 4px;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  color: #64748b;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.add-card-btn:hover { background: #e2e8f0; color: #1e293b; }
+
+/* ===== インライン入力欄 ===== */
+.inline-input-wrap {
+  padding: 0 8px 8px;
+}
+.inline-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 2px solid #3b82f6;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+}
+.inline-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+.btn-primary {
+  padding: 5px 12px;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn-primary:hover { background: #2563eb; }
+.btn-cancel {
+  padding: 5px 12px;
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: 5px;
+}
+.btn-cancel:hover { background: #e2e8f0; }
+
+/* ===== リスト追加ボタン ===== */
+.add-list-btn {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 16px;
+  background: rgba(255,255,255,0.5);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #334155;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+.add-list-btn:hover { background: rgba(255,255,255,0.8); }
+
+/* ===== モーダルオーバーレイ ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal-overlay.hidden { display: none; }
+
+/* ===== モーダル ===== */
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  width: 480px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 24px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #94a3b8;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 4px;
+}
+.modal-close:hover { background: #f1f5f9; color: #475569; }
+
+.modal-body { display: flex; flex-direction: column; gap: 18px; }
+
+.modal-section label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+}
+.modal-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px #bfdbfe; }
+
+.modal-textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  height: 100px;
+  resize: vertical;
+  outline: none;
+  font-family: inherit;
+}
+.modal-textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px #bfdbfe; }
+
+/* ===== ラベル選択UI ===== */
+.label-selector { display: flex; gap: 10px; }
+
+.label-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+.label-btn:hover { transform: scale(1.15); }
+.label-btn.selected { border-color: #1e293b; }
+
+/* ===== モーダルフッター ===== */
+.modal-footer { display: flex; justify-content: flex-end; padding-top: 4px; }
+
+.btn-delete {
+  padding: 7px 16px;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn-delete:hover { background: #dc2626; }
+
+/* ===== 削除確認ダイアログ ===== */
+.confirm-dialog {
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px;
+  width: 320px;
+  text-align: center;
+}
+.confirm-dialog p { font-size: 15px; margin-bottom: 18px; }
+.confirm-actions { display: flex; justify-content: center; gap: 10px; }

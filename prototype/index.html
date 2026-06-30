@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskBoard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <h1>TaskBoard</h1>
+  </header>
+
+  <!-- ボード -->
+  <div class="board">
+
+    <!-- リスト: TODO -->
+    <div class="list">
+      <div class="list-header">
+        <span class="list-title" contenteditable="false">TODO</span>
+        <button class="list-menu-btn">⋮</button>
+        <div class="list-menu hidden">
+          <button class="list-delete-btn">削除</button>
+        </div>
+      </div>
+      <div class="cards">
+        <div class="card" data-card-id="1">
+          <div class="card-labels">
+            <span class="label-chip" style="background:#F87171;"></span>
+            <span class="label-chip" style="background:#60A5FA;"></span>
+          </div>
+          <div class="card-title">デザインのレビュー</div>
+          <div class="card-due overdue">📅 2026/06/25</div>
+        </div>
+        <div class="card" data-card-id="2">
+          <div class="card-labels">
+            <span class="label-chip" style="background:#FBBF24;"></span>
+          </div>
+          <div class="card-title">API仕様書を書く</div>
+          <div class="card-due today">📅 2026/06/30</div>
+        </div>
+        <div class="card" data-card-id="3">
+          <div class="card-labels"></div>
+          <div class="card-title">ミーティング資料の準備</div>
+          <div class="card-due">📅 2026/07/05</div>
+        </div>
+      </div>
+      <button class="add-card-btn">＋ カードを追加</button>
+    </div>
+
+    <!-- リスト: 進行中 -->
+    <div class="list">
+      <div class="list-header">
+        <span class="list-title" contenteditable="false">進行中</span>
+        <button class="list-menu-btn">⋮</button>
+        <div class="list-menu hidden">
+          <button class="list-delete-btn">削除</button>
+        </div>
+      </div>
+      <div class="cards">
+        <div class="card" data-card-id="4">
+          <div class="card-labels">
+            <span class="label-chip" style="background:#34D399;"></span>
+          </div>
+          <div class="card-title">バックエンドのDB設計</div>
+          <div class="card-due">📅 2026/07/10</div>
+        </div>
+        <div class="card" data-card-id="5">
+          <div class="card-labels"></div>
+          <div class="card-title">Reactコンポーネント設計</div>
+          <div class="card-due"></div>
+        </div>
+      </div>
+      <button class="add-card-btn">＋ カードを追加</button>
+    </div>
+
+    <!-- リスト: 完了 -->
+    <div class="list">
+      <div class="list-header">
+        <span class="list-title" contenteditable="false">完了</span>
+        <button class="list-menu-btn">⋮</button>
+        <div class="list-menu hidden">
+          <button class="list-delete-btn">削除</button>
+        </div>
+      </div>
+      <div class="cards">
+        <div class="card" data-card-id="6">
+          <div class="card-labels">
+            <span class="label-chip" style="background:#A78BFA;"></span>
+          </div>
+          <div class="card-title">要件定義書の作成</div>
+          <div class="card-due">📅 2026/06/28</div>
+        </div>
+      </div>
+      <button class="add-card-btn">＋ カードを追加</button>
+    </div>
+
+    <!-- リスト追加ボタン -->
+    <button class="add-list-btn">＋ リストを追加</button>
+
+  </div>
+
+  <!-- カード詳細モーダル -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modal-close">✕</button>
+      <div class="modal-body">
+
+        <div class="modal-section">
+          <label>タイトル</label>
+          <input type="text" id="modal-title" class="modal-input" />
+        </div>
+
+        <div class="modal-section">
+          <label>詳細メモ</label>
+          <textarea id="modal-memo" class="modal-textarea" placeholder="メモを入力..."></textarea>
+        </div>
+
+        <div class="modal-section">
+          <label>ラベル</label>
+          <div class="label-selector">
+            <button class="label-btn" data-color="red"   style="background:#F87171;" title="赤"></button>
+            <button class="label-btn" data-color="yellow" style="background:#FBBF24;" title="黄"></button>
+            <button class="label-btn" data-color="green" style="background:#34D399;" title="緑"></button>
+            <button class="label-btn" data-color="blue"  style="background:#60A5FA;" title="青"></button>
+            <button class="label-btn" data-color="purple" style="background:#A78BFA;" title="紫"></button>
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <label>期限日</label>
+          <input type="date" id="modal-due" class="modal-input" />
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-delete" id="modal-delete">削除</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 削除確認ダイアログ -->
+  <div class="modal-overlay hidden" id="confirm-overlay">
+    <div class="confirm-dialog">
+      <p>このリストを削除しますか？</p>
+      <div class="confirm-actions">
+        <button class="btn-delete" id="confirm-ok">削除する</button>
+        <button class="btn-cancel" id="confirm-cancel">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
