@@ -28,4 +28,4 @@
 |---|---|
 | ビルドツール（Java） | Gradle |
 | ビルドツール（React） | Vite |
-| Javaバージョン | Java 25（LTS） |
+| Javaバージョン | Java 21（LTS）※当初 Java 25 を予定していたがインストールに失敗したため 21 で進める |

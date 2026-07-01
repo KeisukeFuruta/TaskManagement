@@ -21,7 +21,11 @@
       "Bash(git fetch *)",
       "Bash(git pull *)",
       "Bash(git stash *)",
-      "Bash(git show *)"
+      "Bash(git show *)",
+      "Bash(docker compose *)",
+      "Bash(docker exec *)",
+      "Bash(docker ps *)",
+      "Bash(docker logs *)"
     ],
     "deny": [
       "Bash(kill *)",
