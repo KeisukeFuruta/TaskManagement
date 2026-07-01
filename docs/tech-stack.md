@@ -28,4 +28,4 @@
 |---|---|
 | ビルドツール（Java） | Gradle |
 | ビルドツール（React） | Vite |
-| Javaバージョン | 17以上推奨（LTS） |
+| Javaバージョン | Java 25（LTS） |
