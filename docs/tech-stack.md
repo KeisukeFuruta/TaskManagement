@@ -26,6 +26,6 @@
 ## 開発環境
 | 項目 | 技術 |
 |---|---|
-| ビルドツール（Java） | Maven または Gradle |
+| ビルドツール（Java） | Gradle |
 | ビルドツール（React） | Vite |
 | Javaバージョン | 17以上推奨（LTS） |
