@@ -25,7 +25,11 @@
       "Bash(docker compose *)",
       "Bash(docker exec *)",
       "Bash(docker ps *)",
-      "Bash(docker logs *)"
+      "Bash(docker logs *)",
+      "Bash(gh repo *)",
+      "Bash(gh issue *)",
+      "Bash(gh pr *)",
+      "Bash(gh api *)"
     ],
     "deny": [
       "Bash(kill *)",

@@ -1,9 +1,7 @@
 package com.taskmanagement.backend.controller;
 
-import com.taskmanagement.backend.entity.Board;
 import com.taskmanagement.backend.entity.TaskList;
-import com.taskmanagement.backend.repository.BoardRepository;
-import com.taskmanagement.backend.repository.TaskListRepository;
+import com.taskmanagement.backend.service.TaskListService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,41 +11,30 @@ import java.util.UUID;
 @RestController
 public class TaskListController {
 
-    private final TaskListRepository taskListRepository;
-    private final BoardRepository boardRepository;
+    private final TaskListService taskListService;
 
-    public TaskListController(TaskListRepository taskListRepository, BoardRepository boardRepository) {
-        this.taskListRepository = taskListRepository;
-        this.boardRepository = boardRepository;
+    public TaskListController(TaskListService taskListService) {
+        this.taskListService = taskListService;
     }
 
     @GetMapping("/boards/{boardId}/lists")
-    public ResponseEntity<List<TaskList>> getByBoard(@PathVariable UUID boardId) {
-        if (!boardRepository.existsById(boardId)) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(taskListRepository.findByBoardIdOrderByPosition(boardId));
+    public List<TaskList> getByBoard(@PathVariable UUID boardId) {
+        return taskListService.findByBoardId(boardId);
     }
 
     @PostMapping("/boards/{boardId}/lists")
-    public ResponseEntity<TaskList> create(@PathVariable UUID boardId, @RequestBody TaskList body) {
-        return boardRepository.findById(boardId).map(board -> {
-            body.setBoard(board);
-            return ResponseEntity.ok(taskListRepository.save(body));
-        }).orElse(ResponseEntity.notFound().build());
+    public TaskList create(@PathVariable UUID boardId, @RequestBody TaskList body) {
+        return taskListService.create(boardId, body);
     }
 
     @PutMapping("/lists/{id}")
-    public ResponseEntity<TaskList> update(@PathVariable UUID id, @RequestBody TaskList body) {
-        return taskListRepository.findById(id).map(list -> {
-            list.setTitle(body.getTitle());
-            list.setPosition(body.getPosition());
-            return ResponseEntity.ok(taskListRepository.save(list));
-        }).orElse(ResponseEntity.notFound().build());
+    public TaskList update(@PathVariable UUID id, @RequestBody TaskList body) {
+        return taskListService.update(id, body);
     }
 
     @DeleteMapping("/lists/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        if (!taskListRepository.existsById(id)) return ResponseEntity.notFound().build();
-        taskListRepository.deleteById(id);
+        taskListService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
