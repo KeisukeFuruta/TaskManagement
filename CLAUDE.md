@@ -49,4 +49,4 @@ Trello風カンバンボード型タスク管理アプリ（シングルユー�
 1. 新しい作業を始める前に、対応するGitHubイシューを `gh issue list` で確認するか、`gh issue create` で作成する
 2. ブランチを切る際は上記の命名規則に従う（例: `git checkout -b feature/42-add-board-api`）
 3. `main` ブランチに直接コミット・プッシュしない
-4. コミットメッセージは英語で簡潔に（例: `Add board list API endpoint`）
+4. コミットメッセージは日本語で簡潔に（例: `ボードリストAPIエンドポイントを追加`）
