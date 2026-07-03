@@ -276,6 +276,25 @@ body {
 
 .error { color: #ef4444; }
 
+.error-state {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.btn-retry {
+  padding: 7px 16px;
+  background: transparent;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn-retry:hover { background: #f1f5f9; }
+
 /* ===== カード追加ボタン ===== */
 .btn-add-card {
   display: flex;

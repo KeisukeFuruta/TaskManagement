@@ -1,10 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchBoards, fetchLists, fetchCards } from '../api/client';
 import { ListColumn } from './ListColumn';
 import AddListButton from './AddListButton';
 import type { TaskList } from '../types/board';
 
 export function BoardView() {
+  const queryClient = useQueryClient();
   const { data: boards, isLoading: loadingBoards, error: boardError } = useQuery({
     queryKey: ['boards'],
     queryFn: fetchBoards,
@@ -38,7 +39,17 @@ export function BoardView() {
   }
 
   if (boardError) {
-    return <div className="error">ボードの読み込みに失敗しました</div>;
+    return (
+      <div className="error-state">
+        <p className="error">サーバーに接続できませんでした</p>
+        <button
+          className="btn-retry"
+          onClick={() => queryClient.invalidateQueries({ queryKey: ['boards'] })}
+        >
+          再試行
+        </button>
+      </div>
+    );
   }
 
   if (!board) {
