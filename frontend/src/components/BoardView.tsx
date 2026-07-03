@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchBoards, fetchLists, fetchCards } from '../api/client';
 import { ListColumn } from './ListColumn';
@@ -6,12 +7,14 @@ import type { TaskList } from '../types/board';
 
 export function BoardView() {
   const queryClient = useQueryClient();
+  const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
+
   const { data: boards, isLoading: loadingBoards, error: boardError } = useQuery({
     queryKey: ['boards'],
     queryFn: fetchBoards,
   });
 
-  const board = boards?.[0];
+  const board = boards?.find((b) => b.id === selectedBoardId) ?? boards?.[0];
 
   const { data: lists, isLoading: loadingLists } = useQuery({
     queryKey: ['lists', board?.id],
@@ -34,7 +37,7 @@ export function BoardView() {
     enabled: !!lists && lists.length > 0,
   });
 
-  if (loadingBoards || loadingLists || listsWithCards.isLoading) {
+  if (loadingBoards) {
     return <div className="loading">読み込み中...</div>;
   }
 
@@ -58,12 +61,28 @@ export function BoardView() {
 
   return (
     <div className="board-container">
-      <h2 className="board-title">{board.title}</h2>
-      <div className="board">
-        {(listsWithCards.data ?? []).map((list) => (
-          <ListColumn key={list.id} list={list} />
+      <div className="board-tabs">
+        {(boards ?? []).map((b) => (
+          <button
+            key={b.id}
+            className={`board-tab${b.id === board.id ? ' board-tab--active' : ''}`}
+            onClick={() => setSelectedBoardId(b.id)}
+          >
+            {b.title}
+          </button>
         ))}
-        <AddListButton boardId={board.id} />
+      </div>
+      <div className="board">
+        {loadingLists || listsWithCards.isLoading ? (
+          <div className="loading">読み込み中...</div>
+        ) : (
+          <>
+            {(listsWithCards.data ?? []).map((list) => (
+              <ListColumn key={list.id} list={list} />
+            ))}
+            <AddListButton boardId={board.id} />
+          </>
+        )}
       </div>
     </div>
   );
