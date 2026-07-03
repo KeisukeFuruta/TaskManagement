@@ -32,7 +32,6 @@
       "Bash(gh api *)"
     ],
     "deny": [
-      "Bash(kill *)",
       "Bash(killall *)",
       "Bash(pkill *)",
       "Bash(rm -rf *)",

@@ -1,0 +1,277 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  background: #e2e8f0;
+  color: #1e293b;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ===== アプリ全体 ===== */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ===== ヘッダー ===== */
+.header {
+  background: #1e293b;
+  color: #fff;
+  padding: 0 20px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+.app-title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* ===== 検索バー ===== */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.search-input {
+  padding: 6px 10px;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  background: #334155;
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+  width: 200px;
+}
+.search-input::placeholder { color: #94a3b8; }
+.search-input:focus { border-color: #60a5fa; background: #1e293b; }
+
+.search-select {
+  padding: 6px 8px;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  background: #334155;
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+}
+.search-select:focus { border-color: #60a5fa; }
+
+.search-date {
+  padding: 5px 8px;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  background: #334155;
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+}
+.search-date:focus { border-color: #60a5fa; }
+
+.btn-search {
+  padding: 6px 14px;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+.btn-search:hover { background: #2563eb; }
+
+.btn-clear {
+  padding: 6px 12px;
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn-clear:hover { background: #334155; color: #fff; }
+
+/* ===== メインエリア ===== */
+.main {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== ボードタイトル ===== */
+.board-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.board-title {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 16px 4px;
+  color: #334155;
+}
+
+/* ===== ボード ===== */
+.board {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 16px 16px;
+  overflow-x: auto;
+  flex: 1;
+}
+
+/* ===== リスト ===== */
+.list {
+  background: #f1f5f9;
+  border-radius: 10px;
+  width: 272px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 120px);
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px 8px;
+}
+
+.list-title {
+  font-weight: 600;
+  font-size: 13px;
+  flex: 1;
+}
+
+.card-count {
+  font-size: 12px;
+  color: #94a3b8;
+  background: #e2e8f0;
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+
+/* ===== カード一覧 ===== */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 8px 8px;
+  overflow-y: auto;
+}
+
+.empty-list {
+  font-size: 12px;
+  color: #94a3b8;
+  text-align: center;
+  padding: 16px 0;
+}
+
+/* ===== カード ===== */
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: box-shadow 0.15s;
+}
+.card:hover { box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
+
+/* ===== 優先度バッジ ===== */
+.card-priority {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-bottom: 6px;
+}
+.card-priority.urgent { background: #fef2f2; color: #dc2626; }
+.card-priority.high   { background: #fffbeb; color: #d97706; }
+.card-priority.medium { background: #eff6ff; color: #2563eb; }
+.card-priority.low    { background: #f0fdf4; color: #16a34a; }
+
+.card-title { font-size: 14px; line-height: 1.4; }
+
+.card-due {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 6px;
+}
+.card-due.overdue {
+  color: #ef4444;
+  background: #fef2f2;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+.card-due.today { color: #f97316; }
+
+/* ===== 検索結果 ===== */
+.search-results {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.search-results-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #334155;
+}
+
+.result-count {
+  font-size: 13px;
+  font-weight: 400;
+  color: #64748b;
+  margin-left: 4px;
+}
+
+.search-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.search-cards .card {
+  width: 272px;
+}
+
+.no-results {
+  color: #94a3b8;
+  font-size: 14px;
+  padding: 24px 0;
+}
+
+/* ===== ローディング・エラー ===== */
+.loading, .error, .empty-board {
+  padding: 24px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.error { color: #ef4444; }
