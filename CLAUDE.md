@@ -50,3 +50,45 @@ Trello風カンバンボード型タスク管理アプリ（シングルユー�
 2. ブランチを切る際は上記の命名規則に従う（例: `git checkout -b feature/42-add-board-api`）
 3. `main` ブランチに直接コミット・プッシュしない
 4. コミットメッセージは日本語で簡潔に（例: `ボードリストAPIエンドポイントを追加`）
+
+---
+
+## サーバー起動ルール
+
+> **ポートは絶対に変更しない。** 競合したら既存プロセスを停止して、必ず同じポートで起動する。
+
+| サービス | ポート | 設定ファイル |
+|---|---|---|
+| フロントエンド (Vite) | **5173** | `frontend/vite.config.ts` |
+| バックエンド (Spring Boot) | **8080** | `backend/src/main/resources/application.properties` |
+| PostgreSQL (Docker) | **5432** | `docker-compose.yml` |
+
+### ポート競合時の手順（必ず守ること）
+
+1. `lsof -ti :<PORT>` で競合プロセスのPIDを確認する
+2. `kill <PID>` で停止する（終了しない場合のみ `kill -9`）
+3. **同じポートで**再起動する
+
+```bash
+# 例: 8080 が競合している場合
+kill $(lsof -ti :8080) 2>/dev/null || true
+sleep 1
+cd backend && ./gradlew bootRun
+
+# 例: 5173 が競合している場合
+kill $(lsof -ti :5173) 2>/dev/null || true
+sleep 1
+cd frontend && npm run dev
+```
+
+**別ポートでの起動は禁止。**
+Vite の `/api` プロキシ設定（5173 → 8080）とバックエンドの CORS 設定（localhost:5173 を許可）が固定されているため、どちらかのポートを変えると通信が壊れる。
+
+### Claude Code への起動指示
+
+`/start-servers` スキルを使うか、以下の順序で起動すること：
+
+1. `docker compose up -d`（DB）
+2. ポート 8080 を解放してからバックエンド起動
+3. ポート 5173 を解放してからフロントエンド起動
+4. `curl -s -o /dev/null -w "%{http_code}" http://localhost:5173/api/boards` で疎通確認
