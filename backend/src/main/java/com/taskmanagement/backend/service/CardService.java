@@ -40,7 +40,9 @@ public class CardService {
 
     public Card create(UUID listId, Card body) {
         return taskListRepository.findById(listId).map(list -> {
+            int pos = cardRepository.findByTaskListIdOrderByPosition(listId).size();
             body.setTaskList(list);
+            body.setPosition(pos);
             return cardRepository.save(body);
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }

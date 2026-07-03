@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchBoards, fetchLists, fetchCards } from '../api/client';
 import { ListColumn } from './ListColumn';
+import AddListButton from './AddListButton';
 import type { TaskList } from '../types/board';
 
 export function BoardView() {
@@ -51,6 +52,7 @@ export function BoardView() {
         {(listsWithCards.data ?? []).map((list) => (
           <ListColumn key={list.id} list={list} />
         ))}
+        <AddListButton boardId={board.id} />
       </div>
     </div>
   );

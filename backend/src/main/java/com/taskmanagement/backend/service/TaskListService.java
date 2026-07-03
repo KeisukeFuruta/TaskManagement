@@ -30,7 +30,9 @@ public class TaskListService {
 
     public TaskList create(UUID boardId, TaskList body) {
         return boardRepository.findById(boardId).map(board -> {
+            int pos = taskListRepository.findByBoardIdOrderByPosition(boardId).size();
             body.setBoard(board);
+            body.setPosition(pos);
             return taskListRepository.save(body);
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
