@@ -19,7 +19,7 @@ public class BoardService {
     }
 
     public List<Board> findAll() {
-        return boardRepository.findAll();
+        return boardRepository.findAllByOrderByCreatedAtAsc();
     }
 
     public Board findById(UUID id) {

@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import type { Card } from '../types/board';
+import EditCardModal from './EditCardModal';
 
 const PRIORITY_LABEL: Record<string, string> = {
   urgent: '緊急',
@@ -20,22 +22,29 @@ interface Props {
 }
 
 export function CardItem({ card }: Props) {
-  const priority = card.priority ?? 'none';
+  const [editing, setEditing] = useState(false);
+  const priority = (card.priority ?? 'none').toLowerCase();
   const dueClass = getDueClass(card.dueDate);
 
   return (
-    <div className={`card priority-${priority}`}>
-      {priority !== 'none' && (
-        <div className={`card-priority ${priority}`}>
-          {PRIORITY_LABEL[priority] ?? priority}
-        </div>
+    <>
+      <div className={`card priority-${priority}`} onClick={() => setEditing(true)} style={{ cursor: 'pointer' }}>
+        {priority !== 'none' && (
+          <div className={`card-priority ${priority}`}>
+            {PRIORITY_LABEL[priority] ?? priority}
+          </div>
+        )}
+        <div className="card-title">{card.title}</div>
+        {card.dueDate && (
+          <div className={`card-due ${dueClass}`}>
+            📅 {card.dueDate.replace(/-/g, '/')}
+          </div>
+        )}
+      </div>
+
+      {editing && (
+        <EditCardModal card={card} onClose={() => setEditing(false)} />
       )}
-      <div className="card-title">{card.title}</div>
-      {card.dueDate && (
-        <div className={`card-due ${dueClass}`}>
-          📅 {card.dueDate.replace(/-/g, '/')}
-        </div>
-      )}
-    </div>
+    </>
   );
 }
