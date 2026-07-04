@@ -30,12 +30,14 @@ import {
   reorderLists,
   reorderCards,
   moveCard,
+  deleteBoard,
   type ReorderItem,
 } from '../api/client';
 import { SortableList } from './SortableList';
 import { SortableBoardTab } from './SortableBoardTab';
 import { CardItem } from './CardItem';
 import AddListButton from './AddListButton';
+import ConfirmModal from './ConfirmModal';
 import type { Board, TaskList, Card } from '../types/board';
 
 const PRIORITY_ORDER: Record<string, number> = { urgent: 0, high: 1, medium: 2, low: 3 };
@@ -50,6 +52,7 @@ export function BoardView() {
   const [localBoards, setLocalBoards] = useState<Board[]>([]);
   const [localLists, setLocalLists] = useState<TaskList[]>([]);
   const [activeCard, setActiveCard] = useState<Card | null>(null);
+  const [deletingBoardId, setDeletingBoardId] = useState<string | null>(null);
 
   // Refs to track drag source/current list without causing re-renders
   const activeCardSourceListId = useRef<string | null>(null);
@@ -93,6 +96,18 @@ export function BoardView() {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
+  const boardDeleteMutation = useMutation({
+    mutationFn: (id: string) => deleteBoard(id),
+    onSuccess: (_, deletedId) => {
+      queryClient.invalidateQueries({ queryKey: ['boards'] });
+      setDeletingBoardId(null);
+      if (selectedBoardId === deletedId || board?.id === deletedId) {
+        const remaining = localBoards.filter(b => b.id !== deletedId);
+        setSelectedBoardId(remaining.length > 0 ? remaining[0].id : null);
+      }
+    },
+  });
+
   const boardUpdateMutation = useMutation({
     mutationFn: ({ id, title }: { id: string; title: string }) => updateBoard(id, { title }),
     onSuccess: () => {
@@ -132,7 +147,7 @@ export function BoardView() {
   };
 
   const handleBoardTitleKeyDown = (e: React.KeyboardEvent, id: string, originalTitle: string) => {
-    if (e.key === 'Enter') commitBoardTitle(id, originalTitle);
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing) commitBoardTitle(id, originalTitle);
     if (e.key === 'Escape') setEditingBoardId(null);
   };
 
@@ -143,25 +158,19 @@ export function BoardView() {
 
   const board = boards?.find((b) => b.id === selectedBoardId) ?? boards?.[0];
 
-  const { data: lists, isLoading: loadingLists } = useQuery({
-    queryKey: ['lists', board?.id],
-    queryFn: () => fetchLists(board!.id),
-    enabled: !!board,
-  });
-
   const listsWithCards = useQuery({
     queryKey: ['listsWithCards', board?.id],
     queryFn: async () => {
-      if (!lists) return [];
-      const results = await Promise.all(
-        lists.map(async (list) => {
+      if (!board) return [];
+      const allLists = await fetchLists(board.id);
+      return Promise.all(
+        allLists.map(async (list) => {
           const cards = await fetchCards(list.id);
           return { ...list, cards } as TaskList;
         })
       );
-      return results;
     },
-    enabled: !!lists && lists.length > 0,
+    enabled: !!board,
   });
 
   useEffect(() => {
@@ -390,13 +399,14 @@ export function BoardView() {
                 onBlur={() => commitBoardTitle(b.id, b.title)}
                 onKeyDown={(e) => handleBoardTitleKeyDown(e, b.id, b.title)}
                 isPending={boardUpdateMutation.isPending}
+                onDelete={() => setDeletingBoardId(b.id)}
               />
             ))}
           </div>
         </SortableContext>
 
         <div className="board">
-          {loadingLists || listsWithCards.isLoading ? (
+          {listsWithCards.isLoading ? (
             <div className="loading">読み込み中...</div>
           ) : (
             <>
@@ -418,6 +428,14 @@ export function BoardView() {
       <DragOverlay>
         {activeCard ? <CardItem card={activeCard} /> : null}
       </DragOverlay>
+      {deletingBoardId && (
+        <ConfirmModal
+          message={`「${localBoards.find(b => b.id === deletingBoardId)?.title}」を削除しますか？\nリストとカードもすべて削除されます。`}
+          onConfirm={() => boardDeleteMutation.mutate(deletingBoardId)}
+          onCancel={() => setDeletingBoardId(null)}
+          isPending={boardDeleteMutation.isPending}
+        />
+      )}
     </DndContext>
   );
 }

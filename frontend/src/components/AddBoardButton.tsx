@@ -39,7 +39,7 @@ export default function AddBoardButton() {
                 onChange={e => setTitle(e.target.value)}
                 placeholder="ボード名を入力"
                 autoFocus
-                onKeyDown={e => { if (e.key === 'Enter' && title.trim()) mutation.mutate(); }}
+                onKeyDown={e => { if (e.key === 'Enter' && !e.nativeEvent.isComposing && title.trim()) mutation.mutate(); }}
               />
             </div>
 

@@ -13,12 +13,9 @@ export default function AddListButton({ boardId }: Props) {
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: () => createList(boardId, title),
+    mutationFn: (listTitle: string) => createList(boardId, listTitle),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['lists'] });
-      queryClient.invalidateQueries({ queryKey: ['listsWithCards'] });
-      setTitle('');
-      setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ['listsWithCards', boardId] });
     },
   });
 
@@ -27,11 +24,15 @@ export default function AddListButton({ boardId }: Props) {
   }, [open]);
 
   const handleSubmit = () => {
-    if (title.trim()) mutation.mutate();
+    const trimmed = title.trim();
+    if (!trimmed) return;
+    setOpen(false);
+    setTitle('');
+    mutation.mutate(trimmed);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleSubmit();
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleSubmit();
     if (e.key === 'Escape') setOpen(false);
   };
 
@@ -60,9 +61,9 @@ export default function AddListButton({ boardId }: Props) {
           <button
             className="btn-primary"
             onClick={handleSubmit}
-            disabled={!title.trim() || mutation.isPending}
+            disabled={!title.trim()}
           >
-            {mutation.isPending ? '追加中...' : '追加'}
+            追加
           </button>
           <button className="btn-secondary" onClick={() => setOpen(false)}>✕</button>
         </div>

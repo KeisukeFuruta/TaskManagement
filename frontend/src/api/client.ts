@@ -28,6 +28,11 @@ async function put<T>(path: string, body: unknown): Promise<T> {
   return res.json();
 }
 
+async function del(path: string): Promise<void> {
+  const res = await fetch(BASE + path, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`${res.status} ${path}`);
+}
+
 async function patch(path: string, body: unknown): Promise<void> {
   const res = await fetch(BASE + path, {
     method: 'PATCH',
@@ -100,3 +105,7 @@ export const reorderCards = (listId: string, items: ReorderItem[]): Promise<void
 
 export const moveCard = (cardId: string, body: { listId: string; position: number }): Promise<Card> =>
   patchJson(`/cards/${cardId}/move`, body);
+
+export const deleteBoard = (id: string): Promise<void> => del(`/boards/${id}`);
+export const deleteList  = (id: string): Promise<void> => del(`/lists/${id}`);
+export const deleteCard  = (id: string): Promise<void> => del(`/cards/${id}`);

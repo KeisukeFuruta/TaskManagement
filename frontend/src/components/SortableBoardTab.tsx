@@ -14,6 +14,7 @@ interface Props {
   onBlur: () => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
   isPending: boolean;
+  onDelete: () => void;
 }
 
 export function SortableBoardTab({
@@ -28,6 +29,7 @@ export function SortableBoardTab({
   onBlur,
   onKeyDown,
   isPending,
+  onDelete,
 }: Props) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: board.id, data: { type: 'board' } });
@@ -59,9 +61,18 @@ export function SortableBoardTab({
           disabled={isPending}
         />
       ) : (
-        <span onDoubleClick={e => { e.stopPropagation(); onDoubleClick(); }}>
-          {board.title}
-        </span>
+        <>
+          <span onDoubleClick={e => { e.stopPropagation(); onDoubleClick(); }}>
+            {board.title}
+          </span>
+          <button
+            className="board-tab-delete"
+            onClick={e => { e.stopPropagation(); onDelete(); }}
+            title="ボードを削除"
+          >
+            ×
+          </button>
+        </>
       )}
     </div>
   );
