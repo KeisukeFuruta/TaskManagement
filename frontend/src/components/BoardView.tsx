@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchBoards, fetchLists, fetchCards } from '../api/client';
+import { useState, useRef } from 'react';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import { fetchBoards, fetchLists, fetchCards, updateBoard } from '../api/client';
 import { ListColumn } from './ListColumn';
 import AddListButton from './AddListButton';
 import type { TaskList } from '../types/board';
@@ -8,6 +8,38 @@ import type { TaskList } from '../types/board';
 export function BoardView() {
   const queryClient = useQueryClient();
   const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
+  const [editingBoardId, setEditingBoardId] = useState<string | null>(null);
+  const [boardTitleInput, setBoardTitleInput] = useState('');
+  const boardTitleInputRef = useRef<HTMLInputElement>(null);
+
+  const boardUpdateMutation = useMutation({
+    mutationFn: ({ id, title }: { id: string; title: string }) => updateBoard(id, { title }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boards'] });
+      setEditingBoardId(null);
+    },
+    onError: () => setEditingBoardId(null),
+  });
+
+  const startEditingBoard = (id: string, currentTitle: string) => {
+    setBoardTitleInput(currentTitle);
+    setEditingBoardId(id);
+    setTimeout(() => boardTitleInputRef.current?.select(), 0);
+  };
+
+  const commitBoardTitle = (id: string, originalTitle: string) => {
+    const trimmed = boardTitleInput.trim();
+    if (!trimmed || trimmed === originalTitle) {
+      setEditingBoardId(null);
+      return;
+    }
+    boardUpdateMutation.mutate({ id, title: trimmed });
+  };
+
+  const handleBoardTitleKeyDown = (e: React.KeyboardEvent, id: string, originalTitle: string) => {
+    if (e.key === 'Enter') commitBoardTitle(id, originalTitle);
+    if (e.key === 'Escape') setEditingBoardId(null);
+  };
 
   const { data: boards, isLoading: loadingBoards, error: boardError } = useQuery({
     queryKey: ['boards'],
@@ -23,7 +55,7 @@ export function BoardView() {
   });
 
   const listsWithCards = useQuery({
-    queryKey: ['listsWithCards', lists?.map((l) => l.id)],
+    queryKey: ['listsWithCards', lists?.map((l) => `${l.id}-${l.updatedAt}`)],
     queryFn: async () => {
       if (!lists) return [];
       const results = await Promise.all(
@@ -63,13 +95,28 @@ export function BoardView() {
     <div className="board-container">
       <div className="board-tabs">
         {(boards ?? []).map((b) => (
-          <button
+          <div
             key={b.id}
             className={`board-tab${b.id === board.id ? ' board-tab--active' : ''}`}
             onClick={() => setSelectedBoardId(b.id)}
           >
-            {b.title}
-          </button>
+            {editingBoardId === b.id ? (
+              <input
+                ref={boardTitleInputRef}
+                className="board-tab-input"
+                value={boardTitleInput}
+                onChange={e => setBoardTitleInput(e.target.value)}
+                onBlur={() => commitBoardTitle(b.id, b.title)}
+                onKeyDown={e => handleBoardTitleKeyDown(e, b.id, b.title)}
+                onClick={e => e.stopPropagation()}
+                disabled={boardUpdateMutation.isPending}
+              />
+            ) : (
+              <span onDoubleClick={e => { e.stopPropagation(); startEditingBoard(b.id, b.title); }}>
+                {b.title}
+              </span>
+            )}
+          </div>
         ))}
       </div>
       <div className="board">
@@ -78,7 +125,7 @@ export function BoardView() {
         ) : (
           <>
             {(listsWithCards.data ?? []).map((list) => (
-              <ListColumn key={list.id} list={list} />
+              <ListColumn key={list.id} list={list} boardId={board.id} />
             ))}
             <AddListButton boardId={board.id} />
           </>

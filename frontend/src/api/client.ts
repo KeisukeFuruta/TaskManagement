@@ -18,6 +18,16 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   return res.json();
 }
 
+async function put<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(BASE + path, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`${res.status} ${path}`);
+  return res.json();
+}
+
 export const fetchBoards = (): Promise<Board[]> => get('/boards');
 
 export const fetchLists = (boardId: string): Promise<TaskList[]> =>
@@ -44,3 +54,16 @@ export const createCard = (
   listId: string,
   data: { title: string; memo?: string; priority?: string; dueDate?: string }
 ): Promise<Card> => post(`/lists/${listId}/cards`, data);
+
+export const updateBoard = (id: string, body: { title: string }): Promise<Board> =>
+  put(`/boards/${id}`, body);
+
+export const updateList = (
+  id: string,
+  body: { title: string; position: number }
+): Promise<TaskList> => put(`/lists/${id}`, body);
+
+export const updateCard = (
+  id: string,
+  body: { title: string; memo?: string | null; priority?: string | null; dueDate?: string | null; position: number }
+): Promise<Card> => put(`/cards/${id}`, body);
