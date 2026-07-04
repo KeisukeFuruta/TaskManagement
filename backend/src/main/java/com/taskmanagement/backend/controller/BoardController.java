@@ -1,5 +1,6 @@
 package com.taskmanagement.backend.controller;
 
+import com.taskmanagement.backend.dto.ReorderRequest;
 import com.taskmanagement.backend.entity.Board;
 import com.taskmanagement.backend.service.BoardService;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,12 @@ public class BoardController {
     @PutMapping("/{id}")
     public Board update(@PathVariable UUID id, @RequestBody Board body) {
         return boardService.update(id, body);
+    }
+
+    @PatchMapping("/reorder")
+    public ResponseEntity<Void> reorder(@RequestBody List<ReorderRequest> items) {
+        boardService.reorder(items);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

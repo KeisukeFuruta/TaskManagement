@@ -1,16 +1,25 @@
 import { useState, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { TaskList } from '../types/board';
 import { updateList } from '../api/client';
-import { CardItem } from './CardItem';
+import { SortableCard } from './SortableCard';
 import AddCardModal from './AddCardModal';
 
 interface Props {
   list: TaskList;
   boardId: string;
+  dragHandleProps?: React.HTMLAttributes<HTMLSpanElement>;
+  onSortCards: (by: 'priority' | 'dueDate') => void;
 }
 
-export function ListColumn({ list, boardId }: Props) {
+export function ListColumn({ list, boardId, dragHandleProps, onSortCards }: Props) {
+  const { setNodeRef: setDropRef } = useDroppable({
+    id: `list-drop-${list.id}`,
+    data: { type: 'list-container', listId: list.id },
+  });
+
   const [editing, setEditing] = useState(false);
   const [titleInput, setTitleInput] = useState(list.title);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -19,7 +28,7 @@ export function ListColumn({ list, boardId }: Props) {
   const mutation = useMutation({
     mutationFn: (title: string) => updateList(list.id, { title, position: list.position }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['lists', boardId] });
+      queryClient.invalidateQueries({ queryKey: ['listsWithCards', boardId] });
       setEditing(false);
     },
     onError: () => {
@@ -55,6 +64,9 @@ export function ListColumn({ list, boardId }: Props) {
   return (
     <div className="list">
       <div className="list-header">
+        <span className="drag-handle list-drag-handle" {...dragHandleProps} title="ドラッグして並び替え">
+          ⠿
+        </span>
         {editing ? (
           <input
             ref={inputRef}
@@ -71,11 +83,29 @@ export function ListColumn({ list, boardId }: Props) {
           </span>
         )}
         <span className="card-count">{list.cards.length}</span>
+        <div className="sort-buttons">
+          <button
+            className="btn-sort"
+            onClick={() => onSortCards('priority')}
+            title="優先度順に並び替え（保存されます）"
+          >
+            優先度順
+          </button>
+          <button
+            className="btn-sort"
+            onClick={() => onSortCards('dueDate')}
+            title="日付順に並び替え（保存されます）"
+          >
+            日付順
+          </button>
+        </div>
       </div>
-      <div className="cards">
-        {list.cards.map((card) => (
-          <CardItem key={card.id} card={card} />
-        ))}
+      <div className="cards" ref={setDropRef}>
+        <SortableContext items={list.cards.map(c => c.id)} strategy={verticalListSortingStrategy}>
+          {list.cards.map((card) => (
+            <SortableCard key={card.id} card={card} listId={list.id} />
+          ))}
+        </SortableContext>
         {list.cards.length === 0 && (
           <p className="empty-list">カードがありません</p>
         )}

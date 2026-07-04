@@ -28,7 +28,7 @@ export function CardItem({ card }: Props) {
 
   return (
     <>
-      <div className={`card priority-${priority}`} onClick={() => setEditing(true)} style={{ cursor: 'pointer' }}>
+      <div className={`card priority-${priority}`} onClick={() => setEditing(true)}>
         {priority !== 'none' && (
           <div className={`card-priority ${priority}`}>
             {PRIORITY_LABEL[priority] ?? priority}
