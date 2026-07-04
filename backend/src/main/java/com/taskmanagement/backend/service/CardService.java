@@ -1,14 +1,19 @@
 package com.taskmanagement.backend.service;
 
+import com.taskmanagement.backend.dto.ReorderRequest;
 import com.taskmanagement.backend.entity.Card;
+import com.taskmanagement.backend.entity.TaskList;
 import com.taskmanagement.backend.repository.CardRepository;
 import com.taskmanagement.backend.repository.TaskListRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -56,6 +61,33 @@ public class CardService {
             card.setPosition(body.getPosition());
             return cardRepository.save(card);
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @Transactional
+    public Card move(UUID cardId, UUID newListId, int newPosition) {
+        Card card = findById(cardId);
+        TaskList newList = taskListRepository.findById(Objects.requireNonNull(newListId))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        card.setTaskList(newList);
+        card.setPosition(newPosition);
+        return cardRepository.save(card);
+    }
+
+    @Transactional
+    public void reorderCards(UUID listId, List<ReorderRequest> items) {
+        Objects.requireNonNull(listId);
+        if (!taskListRepository.existsById(listId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        List<Card> cards = new ArrayList<>();
+        for (ReorderRequest item : items) {
+            UUID id = Objects.requireNonNull(item.getId());
+            Card card = cardRepository.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            card.setPosition(item.getPosition());
+            cards.add(card);
+        }
+        cardRepository.saveAll(cards);
     }
 
     public void delete(UUID id) {

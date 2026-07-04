@@ -28,6 +28,25 @@ async function put<T>(path: string, body: unknown): Promise<T> {
   return res.json();
 }
 
+async function patch(path: string, body: unknown): Promise<void> {
+  const res = await fetch(BASE + path, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`${res.status} ${path}`);
+}
+
+async function patchJson<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(BASE + path, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`${res.status} ${path}`);
+  return res.json();
+}
+
 export const fetchBoards = (): Promise<Board[]> => get('/boards');
 
 export const fetchLists = (boardId: string): Promise<TaskList[]> =>
@@ -67,3 +86,17 @@ export const updateCard = (
   id: string,
   body: { title: string; memo?: string | null; priority?: string | null; dueDate?: string | null; position: number }
 ): Promise<Card> => put(`/cards/${id}`, body);
+
+export type ReorderItem = { id: string; position: number };
+
+export const reorderBoards = (items: ReorderItem[]): Promise<void> =>
+  patch('/boards/reorder', items);
+
+export const reorderLists = (boardId: string, items: ReorderItem[]): Promise<void> =>
+  patch(`/boards/${boardId}/lists/reorder`, items);
+
+export const reorderCards = (listId: string, items: ReorderItem[]): Promise<void> =>
+  patch(`/lists/${listId}/cards/reorder`, items);
+
+export const moveCard = (cardId: string, body: { listId: string; position: number }): Promise<Card> =>
+  patchJson(`/cards/${cardId}/move`, body);

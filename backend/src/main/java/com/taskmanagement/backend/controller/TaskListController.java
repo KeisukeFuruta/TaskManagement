@@ -1,5 +1,6 @@
 package com.taskmanagement.backend.controller;
 
+import com.taskmanagement.backend.dto.ReorderRequest;
 import com.taskmanagement.backend.entity.TaskList;
 import com.taskmanagement.backend.service.TaskListService;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,12 @@ public class TaskListController {
     @PutMapping("/lists/{id}")
     public TaskList update(@PathVariable UUID id, @RequestBody TaskList body) {
         return taskListService.update(id, body);
+    }
+
+    @PatchMapping("/boards/{boardId}/lists/reorder")
+    public ResponseEntity<Void> reorder(@PathVariable UUID boardId, @RequestBody List<ReorderRequest> items) {
+        taskListService.reorderLists(boardId, items);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/lists/{id}")

@@ -23,6 +23,7 @@ export interface TaskList {
 export interface Board {
   id: string;
   title: string;
+  position: number | null;
   lists: TaskList[];
   createdAt: string;
   updatedAt: string;

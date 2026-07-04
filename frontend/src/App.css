@@ -181,6 +181,7 @@ body {
   gap: 12px;
   padding: 8px 16px 16px;
   overflow-x: auto;
+  scrollbar-gutter: stable;
   flex: 1;
 }
 
@@ -502,3 +503,48 @@ body {
   white-space: nowrap;
 }
 .btn-add-board:hover { background: rgba(255,255,255,0.25); }
+
+/* ===== ドラッグハンドル ===== */
+.drag-handle {
+  cursor: grab;
+  color: #94a3b8;
+  font-size: 16px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  user-select: none;
+  flex-shrink: 0;
+  touch-action: none;
+}
+.drag-handle:hover { color: #475569; background: #e2e8f0; }
+.drag-handle:active { cursor: grabbing; }
+
+/* カード D&D ラッパー（カード全体がドラッグ対象） */
+.sortable-card-wrapper {
+  display: block;
+}
+
+/* リストのドラッグハンドル（ヘッダー左端） */
+.list-drag-handle {
+  font-size: 14px;
+  margin-right: 2px;
+}
+
+/* ===== ソートボタン ===== */
+.sort-buttons {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.btn-sort {
+  font-size: 11px;
+  padding: 2px 6px;
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #64748b;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+.btn-sort:hover { background: #e2e8f0; color: #334155; }

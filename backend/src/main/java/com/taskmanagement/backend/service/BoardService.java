@@ -1,12 +1,16 @@
 package com.taskmanagement.backend.service;
 
+import com.taskmanagement.backend.dto.ReorderRequest;
 import com.taskmanagement.backend.entity.Board;
 import com.taskmanagement.backend.repository.BoardRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -19,7 +23,7 @@ public class BoardService {
     }
 
     public List<Board> findAll() {
-        return boardRepository.findAllByOrderByCreatedAtAsc();
+        return boardRepository.findAllOrdered();
     }
 
     public Board findById(UUID id) {
@@ -28,7 +32,21 @@ public class BoardService {
     }
 
     public Board create(Board board) {
+        int nextPosition = (int) boardRepository.count();
+        board.setPosition(nextPosition);
         return boardRepository.save(board);
+    }
+
+    @Transactional
+    public void reorder(List<ReorderRequest> items) {
+        List<Board> boards = new ArrayList<>();
+        for (ReorderRequest item : items) {
+            UUID id = Objects.requireNonNull(item.getId());
+            Board board = findById(id);
+            board.setPosition(item.getPosition());
+            boards.add(board);
+        }
+        boardRepository.saveAll(boards);
     }
 
     public Board update(UUID id, Board body) {

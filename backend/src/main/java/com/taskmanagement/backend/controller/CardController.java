@@ -1,5 +1,7 @@
 package com.taskmanagement.backend.controller;
 
+import com.taskmanagement.backend.dto.MoveCardRequest;
+import com.taskmanagement.backend.dto.ReorderRequest;
 import com.taskmanagement.backend.entity.Card;
 import com.taskmanagement.backend.service.CardService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -45,6 +47,17 @@ public class CardController {
     @PutMapping("/cards/{id}")
     public Card update(@PathVariable UUID id, @RequestBody Card body) {
         return cardService.update(id, body);
+    }
+
+    @PatchMapping("/cards/{id}/move")
+    public Card move(@PathVariable UUID id, @RequestBody MoveCardRequest body) {
+        return cardService.move(id, body.getListId(), body.getPosition());
+    }
+
+    @PatchMapping("/lists/{listId}/cards/reorder")
+    public ResponseEntity<Void> reorder(@PathVariable UUID listId, @RequestBody List<ReorderRequest> items) {
+        cardService.reorderCards(listId, items);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/cards/{id}")

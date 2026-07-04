@@ -22,6 +22,9 @@ public class Board {
     @Column(nullable = false)
     private String title;
 
+    @Column
+    private Integer position;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -37,6 +40,8 @@ public class Board {
     public UUID getId() { return id; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
+    public Integer getPosition() { return position; }
+    public void setPosition(Integer position) { this.position = position; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public List<TaskList> getLists() { return lists; }
