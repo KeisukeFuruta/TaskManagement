@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateCard } from '../api/client';
+import { updateCard, deleteCard } from '../api/client';
 import type { Card } from '../types/board';
+import ConfirmModal from './ConfirmModal';
 
 interface Props {
   card: Card;
@@ -13,6 +14,7 @@ export default function EditCardModal({ card, onClose }: Props) {
   const [memo, setMemo] = useState(card.memo ?? '');
   const [priority, setPriority] = useState((card.priority ?? '').toLowerCase());
   const [dueDate, setDueDate] = useState(card.dueDate ?? '');
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
     setTitle(card.title);
@@ -37,64 +39,90 @@ export default function EditCardModal({ card, onClose }: Props) {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteCard(card.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['listsWithCards'] });
+      onClose();
+    },
+  });
+
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={e => e.stopPropagation()}>
-        <h2>カードを編集</h2>
+    <>
+      <div className="modal-overlay" onClick={onClose}>
+        <div className="modal" onClick={e => e.stopPropagation()}>
+          <h2>カードを編集</h2>
 
-        <div className="form-group">
-          <label>タイトル *</label>
-          <input
-            className="form-input"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            placeholder="カードのタイトル"
-            autoFocus
-          />
-        </div>
+          <div className="form-group">
+            <label>タイトル *</label>
+            <input
+              className="form-input"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              placeholder="カードのタイトル"
+              autoFocus
+            />
+          </div>
 
-        <div className="form-group">
-          <label>メモ</label>
-          <textarea
-            className="form-textarea"
-            value={memo}
-            onChange={e => setMemo(e.target.value)}
-            placeholder="メモ（任意）"
-          />
-        </div>
+          <div className="form-group">
+            <label>メモ</label>
+            <textarea
+              className="form-textarea"
+              value={memo}
+              onChange={e => setMemo(e.target.value)}
+              placeholder="メモ（任意）"
+            />
+          </div>
 
-        <div className="form-group">
-          <label>優先度</label>
-          <select className="form-select" value={priority} onChange={e => setPriority(e.target.value)}>
-            <option value="">なし</option>
-            <option value="urgent">緊急</option>
-            <option value="high">高</option>
-            <option value="medium">中</option>
-            <option value="low">低</option>
-          </select>
-        </div>
+          <div className="form-group">
+            <label>優先度</label>
+            <select className="form-select" value={priority} onChange={e => setPriority(e.target.value)}>
+              <option value="">なし</option>
+              <option value="urgent">緊急</option>
+              <option value="high">高</option>
+              <option value="medium">中</option>
+              <option value="low">低</option>
+            </select>
+          </div>
 
-        <div className="form-group">
-          <label>期限日</label>
-          <input
-            type="date"
-            className="form-input"
-            value={dueDate}
-            onChange={e => setDueDate(e.target.value)}
-          />
-        </div>
+          <div className="form-group">
+            <label>期限日</label>
+            <input
+              type="date"
+              className="form-input"
+              value={dueDate}
+              onChange={e => setDueDate(e.target.value)}
+            />
+          </div>
 
-        <div className="modal-actions">
-          <button className="btn-secondary" onClick={onClose}>キャンセル</button>
-          <button
-            className="btn-primary"
-            onClick={() => mutation.mutate()}
-            disabled={!title.trim() || mutation.isPending}
-          >
-            {mutation.isPending ? '保存中...' : '保存'}
-          </button>
+          <div className="modal-actions">
+            <button
+              className="btn-danger"
+              onClick={() => setConfirmDelete(true)}
+              style={{ marginRight: 'auto' }}
+            >
+              削除
+            </button>
+            <button className="btn-secondary" onClick={onClose}>キャンセル</button>
+            <button
+              className="btn-primary"
+              onClick={() => mutation.mutate()}
+              disabled={!title.trim() || mutation.isPending}
+            >
+              {mutation.isPending ? '保存中...' : '保存'}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {confirmDelete && (
+        <ConfirmModal
+          message={`「${card.title}」を削除しますか？`}
+          onConfirm={() => deleteMutation.mutate()}
+          onCancel={() => setConfirmDelete(false)}
+          isPending={deleteMutation.isPending}
+        />
+      )}
+    </>
   );
 }

@@ -3,9 +3,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { TaskList } from '../types/board';
-import { updateList } from '../api/client';
+import { updateList, deleteList } from '../api/client';
 import { SortableCard } from './SortableCard';
 import AddCardModal from './AddCardModal';
+import ConfirmModal from './ConfirmModal';
 
 interface Props {
   list: TaskList;
@@ -23,8 +24,18 @@ export function ListColumn({ list, boardId, dragHandleProps, onSortCards }: Prop
   const [editing, setEditing] = useState(false);
   const [titleInput, setTitleInput] = useState(list.title);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const queryClient = useQueryClient();
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteList(list.id),
+    onSuccess: () => {
+      setConfirmDelete(false);
+      queryClient.invalidateQueries({ queryKey: ['listsWithCards', boardId] });
+      queryClient.invalidateQueries({ queryKey: ['lists', boardId] });
+    },
+  });
+
   const mutation = useMutation({
     mutationFn: (title: string) => updateList(list.id, { title, position: list.position }),
     onSuccess: () => {
@@ -54,7 +65,7 @@ export function ListColumn({ list, boardId, dragHandleProps, onSortCards }: Prop
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') commit();
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing) commit();
     if (e.key === 'Escape') {
       setEditing(false);
       setTitleInput(list.title);
@@ -83,6 +94,13 @@ export function ListColumn({ list, boardId, dragHandleProps, onSortCards }: Prop
           </span>
         )}
         <span className="card-count">{list.cards.length}</span>
+        <button
+          className="list-delete-btn"
+          onClick={() => setConfirmDelete(true)}
+          title="リストを削除"
+        >
+          ×
+        </button>
         <div className="sort-buttons">
           <button
             className="btn-sort"
@@ -111,6 +129,14 @@ export function ListColumn({ list, boardId, dragHandleProps, onSortCards }: Prop
         )}
       </div>
       <AddCardModal listId={list.id} />
+      {confirmDelete && (
+        <ConfirmModal
+          message={`「${list.title}」を削除しますか？\nカードもすべて削除されます。`}
+          onConfirm={() => deleteMutation.mutate()}
+          onCancel={() => setConfirmDelete(false)}
+          isPending={deleteMutation.isPending}
+        />
+      )}
     </div>
   );
 }
