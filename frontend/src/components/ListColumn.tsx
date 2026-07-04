@@ -1,5 +1,6 @@
 import type { TaskList } from '../types/board';
 import { CardItem } from './CardItem';
+import AddCardModal from './AddCardModal';
 
 interface Props {
   list: TaskList;
@@ -20,6 +21,7 @@ export function ListColumn({ list }: Props) {
           <p className="empty-list">カードがありません</p>
         )}
       </div>
+      <AddCardModal listId={list.id} />
     </div>
   );
 }

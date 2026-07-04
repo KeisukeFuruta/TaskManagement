@@ -117,7 +117,7 @@ body {
   flex-direction: column;
 }
 
-/* ===== ボードタイトル ===== */
+/* ===== ボードタブ ===== */
 .board-container {
   display: flex;
   flex-direction: column;
@@ -125,11 +125,33 @@ body {
   overflow: hidden;
 }
 
-.board-title {
-  font-size: 16px;
+.board-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 16px 0;
+  border-bottom: 2px solid #cbd5e1;
+  flex-shrink: 0;
+}
+
+.board-tab {
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 6px 6px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  position: relative;
+  bottom: -2px;
+  border-bottom: 2px solid transparent;
+}
+.board-tab:hover { background: #f1f5f9; color: #334155; }
+.board-tab--active {
+  color: #1e293b;
   font-weight: 600;
-  padding: 12px 16px 4px;
-  color: #334155;
+  border-bottom: 2px solid #3b82f6;
+  background: #fff;
 }
 
 /* ===== ボード ===== */
@@ -275,3 +297,188 @@ body {
 }
 
 .error { color: #ef4444; }
+
+.error-state {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.btn-retry {
+  padding: 7px 16px;
+  background: transparent;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn-retry:hover { background: #f1f5f9; }
+
+/* ===== カード追加ボタン ===== */
+.btn-add-card {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #64748b;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  margin: 4px 8px 8px;
+  width: calc(100% - 16px);
+}
+.btn-add-card:hover { background: #e2e8f0; color: #334155; }
+
+/* ===== モーダル ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  width: 400px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.modal h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1e293b;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.form-input, .form-select, .form-textarea {
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  color: #1e293b;
+  background: #fff;
+  font-family: inherit;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.15);
+}
+.form-textarea { resize: vertical; min-height: 72px; }
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.btn-primary {
+  padding: 8px 18px;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+.btn-primary:hover { background: #2563eb; }
+.btn-primary:disabled { background: #93c5fd; cursor: not-allowed; }
+
+.btn-secondary {
+  padding: 8px 16px;
+  background: transparent;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btn-secondary:hover { background: #f1f5f9; }
+
+/* ===== リスト追加ボタン ===== */
+.add-list-col {
+  flex-shrink: 0;
+  width: 272px;
+}
+
+.btn-add-list {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.5);
+  border: none;
+  border-radius: 10px;
+  color: #475569;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.btn-add-list:hover { background: rgba(255,255,255,0.8); }
+
+.add-list-form {
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-list-input {
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+}
+.add-list-input:focus { border-color: #3b82f6; }
+
+.add-list-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* ===== ボード追加ボタン（ヘッダー内） ===== */
+.btn-add-board {
+  padding: 5px 12px;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.btn-add-board:hover { background: rgba(255,255,255,0.25); }
