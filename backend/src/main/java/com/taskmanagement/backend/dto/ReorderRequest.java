@@ -1,9 +1,12 @@
 package com.taskmanagement.backend.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.UUID;
 
 public class ReorderRequest {
 
+    @NotNull
     private UUID id;
     private int position;
 

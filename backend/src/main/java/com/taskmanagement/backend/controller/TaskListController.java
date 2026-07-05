@@ -45,7 +45,7 @@ public class TaskListController {
 
     @PatchMapping("/boards/{boardId}/lists/reorder")
     public ResponseEntity<Void> reorder(
-            @PathVariable UUID boardId, @RequestBody List<ReorderRequest> items) {
+            @PathVariable UUID boardId, @Valid @RequestBody List<ReorderRequest> items) {
         taskListService.reorderLists(boardId, items);
         return ResponseEntity.noContent().build();
     }
