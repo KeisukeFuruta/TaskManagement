@@ -68,3 +68,41 @@
 - ボードのリスト列右端に「+ リストを追加」ボタンを常に表示
 - クリックするとインライン入力欄が展開
 - リスト名を入力して「追加」ボタンまたはEnterで作成、✕またはEscでキャンセル
+
+---
+
+## API エンドポイント一覧
+
+### ボード API
+
+| メソッド | パス | 説明 |
+|---|---|---|
+| GET | `/boards` | ボード一覧取得 |
+| GET | `/boards/{id}` | ボード詳細取得 |
+| POST | `/boards` | ボード作成（201 Created） |
+| PUT | `/boards/{id}` | ボード更新 |
+| PATCH | `/boards/reorder` | ボード並び順一括更新（D&D） |
+| DELETE | `/boards/{id}` | ボード削除（204 No Content） |
+
+### リスト API
+
+| メソッド | パス | 説明 |
+|---|---|---|
+| GET | `/boards/{boardId}/lists` | 指定ボード内のリスト一覧取得 |
+| POST | `/boards/{boardId}/lists` | リスト作成（201 Created） |
+| PUT | `/lists/{id}` | リスト更新（タイトル・並び順） |
+| PATCH | `/boards/{boardId}/lists/reorder` | リスト並び順一括更新（D&D） |
+| DELETE | `/lists/{id}` | リスト削除（204 No Content） |
+
+### カード API
+
+| メソッド | パス | 説明 |
+|---|---|---|
+| GET | `/lists/{listId}/cards` | 指定リスト内のカード一覧取得 |
+| GET | `/cards/{id}` | カード単体取得 |
+| GET | `/cards/search` | カード検索（`?title=&priority=&dueDate=`） |
+| POST | `/lists/{listId}/cards` | カード作成（201 Created） |
+| PUT | `/cards/{id}` | カード更新（タイトル・メモ・優先度・期限日・並び順） |
+| PATCH | `/cards/{id}/move` | カードのリスト間移動（D&D） |
+| PATCH | `/lists/{listId}/cards/reorder` | カード並び順一括更新（D&D） |
+| DELETE | `/cards/{id}` | カード削除（204 No Content） |

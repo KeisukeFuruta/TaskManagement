@@ -4,6 +4,8 @@ import com.taskmanagement.backend.dto.ReorderRequest;
 import com.taskmanagement.backend.entity.TaskList;
 import com.taskmanagement.backend.repository.BoardRepository;
 import com.taskmanagement.backend.repository.TaskListRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,8 @@ import java.util.UUID;
 @Service
 public class TaskListService {
 
+    private static final Logger log = LoggerFactory.getLogger(TaskListService.class);
+
     private final TaskListRepository taskListRepository;
     private final BoardRepository boardRepository;
 
@@ -25,6 +29,7 @@ public class TaskListService {
         this.boardRepository = boardRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<TaskList> findByBoardId(UUID boardId) {
         if (!boardRepository.existsById(boardId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -32,6 +37,7 @@ public class TaskListService {
         return taskListRepository.findByBoardIdOrderByPosition(boardId);
     }
 
+    @Transactional
     public TaskList create(UUID boardId, TaskList body) {
         return boardRepository.findById(boardId).map(board -> {
             int pos = taskListRepository.findByBoardIdOrderByPosition(boardId).size();
@@ -41,6 +47,7 @@ public class TaskListService {
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    @Transactional
     public TaskList update(UUID id, TaskList body) {
         return taskListRepository.findById(id).map(list -> {
             list.setTitle(body.getTitle());
@@ -65,8 +72,10 @@ public class TaskListService {
         taskListRepository.saveAll(lists);
     }
 
+    @Transactional
     public void delete(UUID id) {
         if (!taskListRepository.existsById(id)) {
+            log.warn("TaskList not found for deletion: {}", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         taskListRepository.deleteById(id);

@@ -5,6 +5,7 @@ erDiagram
     BOARD {
         uuid id PK
         varchar title
+        int position
         timestamp created_at
         timestamp updated_at
     }
@@ -41,6 +42,7 @@ erDiagram
 |---|---|---|---|
 | id | UUID | PK | ボードの一意識別子 |
 | title | VARCHAR(255) | NOT NULL | ボード名 |
+| position | INT | NULL可 | 表示順（ボード並び替え用） |
 | created_at | TIMESTAMP | NOT NULL | 作成日時 |
 | updated_at | TIMESTAMP | NOT NULL | 更新日時 |
 
