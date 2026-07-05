@@ -66,7 +66,7 @@ public class CardController {
 
     @PatchMapping("/lists/{listId}/cards/reorder")
     public ResponseEntity<Void> reorder(
-            @PathVariable UUID listId, @RequestBody List<ReorderRequest> items) {
+            @PathVariable UUID listId, @Valid @RequestBody List<ReorderRequest> items) {
         cardService.reorderCards(listId, items);
         return ResponseEntity.noContent().build();
     }

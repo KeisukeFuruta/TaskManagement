@@ -15,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -75,7 +74,7 @@ public class CardService {
     @Transactional
     public Card move(UUID cardId, UUID newListId, int newPosition) {
         Card card = findById(cardId);
-        TaskList newList = taskListRepository.findById(Objects.requireNonNull(newListId))
+        TaskList newList = taskListRepository.findById(newListId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         card.setTaskList(newList);
         card.setPosition(newPosition);
@@ -84,13 +83,12 @@ public class CardService {
 
     @Transactional
     public void reorderCards(UUID listId, List<ReorderRequest> items) {
-        Objects.requireNonNull(listId);
         if (!taskListRepository.existsById(listId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         List<Card> cards = new ArrayList<>();
         for (ReorderRequest item : items) {
-            UUID id = Objects.requireNonNull(item.getId());
+            UUID id = item.getId();
             Card card = cardRepository.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
             card.setPosition(item.getPosition());

@@ -2,6 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(./gradlew *)",
+      "Bash(cd backend && ./gradlew *)",
       "Bash(lsof *)",
       "Bash(curl *)",
       "Bash(unzip *)",

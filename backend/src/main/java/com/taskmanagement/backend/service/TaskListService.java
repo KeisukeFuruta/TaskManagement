@@ -13,7 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -63,7 +62,7 @@ public class TaskListService {
         }
         List<TaskList> lists = new ArrayList<>();
         for (ReorderRequest item : items) {
-            UUID id = Objects.requireNonNull(item.getId());
+            UUID id = item.getId();
             TaskList list = taskListRepository.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
             list.setPosition(item.getPosition());
