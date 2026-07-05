@@ -5,6 +5,8 @@ import com.taskmanagement.backend.entity.Card;
 import com.taskmanagement.backend.entity.TaskList;
 import com.taskmanagement.backend.repository.CardRepository;
 import com.taskmanagement.backend.repository.TaskListRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,8 @@ import java.util.UUID;
 @Service
 public class CardService {
 
+    private static final Logger log = LoggerFactory.getLogger(CardService.class);
+
     private final CardRepository cardRepository;
     private final TaskListRepository taskListRepository;
 
@@ -27,6 +31,7 @@ public class CardService {
         this.taskListRepository = taskListRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Card> findByListId(UUID listId) {
         if (!taskListRepository.existsById(listId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -34,15 +39,18 @@ public class CardService {
         return cardRepository.findByTaskListIdOrderByPosition(listId);
     }
 
+    @Transactional(readOnly = true)
     public Card findById(UUID id) {
         return cardRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     public List<Card> search(String title, String priority, LocalDate dueDate) {
         return cardRepository.searchCards(title, priority, dueDate);
     }
 
+    @Transactional
     public Card create(UUID listId, Card body) {
         return taskListRepository.findById(listId).map(list -> {
             int pos = cardRepository.findByTaskListIdOrderByPosition(listId).size();
@@ -52,6 +60,7 @@ public class CardService {
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    @Transactional
     public Card update(UUID id, Card body) {
         return cardRepository.findById(id).map(card -> {
             card.setTitle(body.getTitle());
@@ -90,8 +99,10 @@ public class CardService {
         cardRepository.saveAll(cards);
     }
 
+    @Transactional
     public void delete(UUID id) {
         if (!cardRepository.existsById(id)) {
+            log.warn("Card not found for deletion: {}", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         cardRepository.deleteById(id);

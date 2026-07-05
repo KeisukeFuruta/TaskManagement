@@ -4,9 +4,19 @@ import com.taskmanagement.backend.dto.MoveCardRequest;
 import com.taskmanagement.backend.dto.ReorderRequest;
 import com.taskmanagement.backend.entity.Card;
 import com.taskmanagement.backend.service.CardService;
+import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,22 +50,23 @@ public class CardController {
     }
 
     @PostMapping("/lists/{listId}/cards")
-    public Card create(@PathVariable UUID listId, @RequestBody Card body) {
-        return cardService.create(listId, body);
+    public ResponseEntity<Card> create(@PathVariable UUID listId, @Valid @RequestBody Card body) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(cardService.create(listId, body));
     }
 
     @PutMapping("/cards/{id}")
-    public Card update(@PathVariable UUID id, @RequestBody Card body) {
+    public Card update(@PathVariable UUID id, @Valid @RequestBody Card body) {
         return cardService.update(id, body);
     }
 
     @PatchMapping("/cards/{id}/move")
-    public Card move(@PathVariable UUID id, @RequestBody MoveCardRequest body) {
+    public Card move(@PathVariable UUID id, @Valid @RequestBody MoveCardRequest body) {
         return cardService.move(id, body.getListId(), body.getPosition());
     }
 
     @PatchMapping("/lists/{listId}/cards/reorder")
-    public ResponseEntity<Void> reorder(@PathVariable UUID listId, @RequestBody List<ReorderRequest> items) {
+    public ResponseEntity<Void> reorder(
+            @PathVariable UUID listId, @RequestBody List<ReorderRequest> items) {
         cardService.reorderCards(listId, items);
         return ResponseEntity.noContent().build();
     }
