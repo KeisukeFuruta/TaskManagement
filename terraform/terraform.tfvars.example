@@ -1,0 +1,14 @@
+# このファイルをコピーして terraform.tfvars を作成してください
+# cp terraform.tfvars.example terraform.tfvars
+
+db_password  = "ここに安全なパスワードを設定"
+project_name = "taskmanagement"
+aws_region   = "ap-northeast-1"
+
+# アクセスを許可するIPアドレスのリスト
+# 「自分のIP/32」の形式で記載する（/32 = そのIPだけ という意味）
+# IPが変わったら追加・削除して terraform apply を再実行する
+allowed_cidr_blocks = [
+  "xxx.xxx.xxx.xxx/32",  # テザリング
+  # "yyy.yyy.yyy.yyy/32",  # 自宅Wi-Fi（帰宅後に追加）
+]

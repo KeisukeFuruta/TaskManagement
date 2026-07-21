@@ -1,0 +1,11 @@
+# パスワードなどの機密情報
+terraform.tfvars
+
+# SSH秘密鍵（絶対にGitに入れない）
+*.pem
+
+# Terraformの内部ファイル
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
